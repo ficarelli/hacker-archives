@@ -16,8 +16,8 @@
   ),
   (
     name: "Usenet Archives",
-    url: "https://archive.org/details/usenet",
-    description: [Internet Archive's collection of Usenet newsgroup discussions.],
+    url: "https://www.usenetarchives.com/",
+    description: [Browsable archive of Usenet newsgroup discussions.],
   ),
   (
     name: "Museum of Data",
@@ -25,12 +25,12 @@
   ),
   (
     name: "Usenet Text Archive",
-    url: "https://archive.org/details/Usenet_Text_Archive",
-    description: [Early Usenet text archive hosted by the Internet Archive.],
+    url: "https://www.reddit.com/r/DataHoarder/comments/in7rd8/the_usenet_text_archive_goes_online_300_gigs/",
+    description: [300 GB of early Usenet text, released online and mirrored by the Internet Archive.],
   ),
   (
     name: "Software Heritage Collection Program",
-    url: "https://www.softwareheritage.org/",
+    url: "https://archive.softwareheritage.org/",
     description: [Universal source code archive collecting and preserving software in all its forms.],
   ),
   (
@@ -40,11 +40,16 @@
   ),
   (
     name: "Minitel Research Lab",
-    url: "https://minitelresearchlab.com/",
+    url: "https://minitel.us/",
   ),
   (
     name: "Anna's Archive",
     url: "https://annas-archive.org/",
+  ),
+  (
+    name: "Library Genesis (libgen.li)",
+    url: "https://libgen.li/",
+    description: [Shadow library of books, articles, and scientific papers.],
   ),
   (
     name: "Internet Artifacts (neal.fun)",

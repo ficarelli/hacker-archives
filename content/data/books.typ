@@ -1,42 +1,52 @@
 #let books = (
   (
     name: "Cult of The Dead Cow",
-    url: "https://www.goodreads.com/book/show/42283862-cult-of-the-dead-cow",
+    url: "https://search.worldcat.org/title/1056778895",
     authors: "Joseph Menn",
   ),
   (
     name: "Space Rogue: How the Hackers Known as L0pht Changed the World",
-    url: "https://www.goodreads.com/en/book/show/90400419-space-rogue",
+    url: "https://search.worldcat.org/title/1379294303",
     authors: "Cris Thomas",
   ),
   (
     name: "Underground",
     authors: "Suelette Dreyfus, Julian Assange",
-    url: "https://www.underground-book.net/",
+    url: "https://search.worldcat.org/title/1479801406",
   ),
   (
     name: "Masters of Deception: The Gang that Ruled Cyberspace",
-    url: "https://www.goodreads.com/book/show/984598.Masters_of_Deception",
+    url: "https://search.worldcat.org/title/34482185",
     authors: "Michelle Slatalla, Joshua Quittner",
   ),
   (
     name: "Cyber Crimes",
-    url: "https://www.amazon.com/Cyber-Crimes-Crime-Justice-Punishment/dp/0791042529",
+    url: "https://search.worldcat.org/title/41096194",
     authors: "Gina De Angelis",
   ),
   (
     name: "The Hacker Crackdown: Law and Disorder on the Electronic Frontier",
     authors: "Bruce Sterling",
-    url: "https://www.gutenberg.org/ebooks/101",
+    url: "https://search.worldcat.org/title/25914955",
   ),
   (
     name: "Cyberpunk: Outlaws and Hackers on the Computer Frontier",
-    url: "https://www.goodreads.com/book/show/369966.Cyberpunk",
+    url: "https://search.worldcat.org/title/33235343",
     authors: "Katie Hafner, John Markoff",
   ),
   (
     name: "Hackers: Crime in the Digital Sublime",
-    url: "https://www.routledge.com/Hackers-Crime-and-the-Digital-Sublime/Taylor/p/book/9780415180726",
+    url: "https://search.worldcat.org/title/40862226",
     authors: "Paul A. Taylor",
+  ),
+  (
+    name: "PoC||GTFO (Proof of Concept or Get the Fuck Out)",
+    url: "https://www.penguinrandomhouse.ca/books/572874/poc-or-gtfo-by-manul-laphroaig/9781593278984",
+    authors: "Manul Laphroaig",
+  ),
+  (
+    name: "The Cuckoo's Egg",
+    year: 1989,
+    authors: "Clifford Stoll",
   ),
 )

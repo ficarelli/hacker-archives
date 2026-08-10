@@ -25,20 +25,21 @@
   ),
   (
     name: "FIRST Vulnerability Database Catalog",
-    url: "https://www.first.org/cvss/",
-    description: [Forum of Incident Response and Security Teams vulnerability resources.],
+    url: "https://www.first.org/global/sigs/vrdx/vdb-catalog",
+    description: [Catalog of vulnerability databases maintained by the FIRST VRDX Special Interest Group.],
   ),
   (
-    name: "Mailing List ARChives",
-    url: "https://mlarchive.org/",
+    name: "Mailing List ARChives (MARC)",
+    url: "https://marc.info/",
+    description: [Long-running archive of technical and security mailing lists.],
   ),
   (
     name: "Real Hack History",
-    url: "https://realhackhistory.com/",
+    url: "https://www.youtube.com/c/realhackhistory/videos",
   ),
   (
     name: "@todayininfosec",
-    url: "https://twitter.com/todayininfosec",
+    url: "https://x.com/todayininfosec",
     description: [Daily posts about infosec history.],
   ),
   (
@@ -62,9 +63,9 @@
     description: [Security errata, mirrored hacker text files, and historical data.],
   ),
   (
-    name: "Where Wizards Stay Up Late",
-    url: "https://www.goodreads.com/book/show/281818.Where_Wizards_Stay_Up_Late",
-    description: [Book by Katie Hafner and Matthew Lyon on the origins of the Internet.],
+    name: "Where Warlocks Stay Up Late",
+    url: "https://wherewarlocksstayuplate.com/",
+    description: [Interview series documenting cybersecurity history through its pioneering figures.],
   ),
   (
     name: "Hack_Curio: Decoding the Cultures of Hacking",
@@ -73,7 +74,7 @@
   ),
   (
     name: "HackerSpaces",
-    url: "https://hackerspaces.org/",
+    url: "https://wiki.hackerspaces.org/",
     description: [Community-maintained wiki and directory of hackerspaces worldwide.],
   ),
   (
@@ -87,6 +88,11 @@
     description: [Internet Archive collection of neutralized MS-DOS-era viruses.],
   ),
   (
+    name: "The Malware Museum",
+    url: "https://malwaremuseum.neocities.org/",
+    description: [Neocities companion site presenting malware from the museum collection.],
+  ),
+  (
     name: "The Jargon File",
     url: "http://www.catb.org/jargon/html/",
     description: [Comprehensive compendium of hacker slang and culture.],
@@ -98,15 +104,16 @@
   ),
   (
     name: "Packet Storm",
-    url: "https://packetstormsecurity.com/",
+    url: "https://packetstorm.news/help/view/4",
     description: [Security information resource with vulnerability and exploit database.],
   ),
   (
     name: "Computer Viruses, Trojans, and Worms in Action",
-    url: "https://archive.org/details/computer-viruses-trojans-and-worms-in-action",
+    url: "https://www.youtube.com/@danooct1",
+    description: [danooct1's video demonstrations of historical malware running on period hardware.],
   ),
   (
-    name: "Complete List of Movies about Cybersecurity and Hacking",
-    url: "https://www.infosecinstitute.com/resources/hacking/complete-list-of-movies-about-cybersecurity-and-hacking/",
+    name: "\"Complete\" List of Movies about Cybersecurity and Hacking",
+    url: "https://cybersecurityventures.com/movies-about-cybersecurity-and-hacking/",
   ),
 )

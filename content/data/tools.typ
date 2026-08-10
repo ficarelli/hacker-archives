@@ -50,7 +50,7 @@
   ),
   (
     name: "Emulation as a Service Infrastructure",
-    url: "https://www.softwarepreservationnetwork.org/",
+    url: "https://www.softwarepreservationnetwork.org/emulation-as-a-service-infrastructure/",
     description: [Emulation infrastructure by the Software Preservation Network for access to legacy software.],
   ),
   (
@@ -60,12 +60,12 @@
   ),
   (
     name: "BitCurator",
-    url: "https://bitcurator.net/",
+    url: "https://bitcurator.github.io/",
     description: [Digital forensics tools for collecting institutions, by the BitCurator Consortium.],
   ),
   (
     name: "DART: Digital Archivist's Resource Tool",
-    url: "https://dart.aptrust.org/",
+    url: "https://aptrust.org/documentation-page/dart-digital-archivists-resource-tool/",
     description: [Tool for transferring digital archives, part of the APTrust preservation ecosystem.],
   ),
 )

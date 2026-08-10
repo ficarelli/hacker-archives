@@ -2,17 +2,29 @@
    CSS Variables
    ============================================ */
 :root {
-  --background-color: #fdfdfd;
+  --background-color: #ffffff;
   --text-color: #1a1a1a;
   --link-color: #1a1a1a;
+
+  /* Mauve accent taken from the wordmark and the h_a mark */
+  --accent: #b05f80;
+  --accent-dark: #8f4a67;
+  --accent-ink: #ffffff;
+
+  /* Search field: soft pink fill with a plum placeholder */
+  --search-bg: #e7c1d0;
+  --search-bg-focus: #e0b3c5;
+  --search-placeholder: #7d4b63;
+
   --blockquote-border: #e6e6e6;
   --blockquote-text: #606060;
-  --pill-bg: #f0f0f0;
-  --pill-active-bg: #1a1a1a;
-  --pill-active-text: #ffffff;
-  --pill-border: #d0d0d0;
   --section-heading-color: #666666;
   --muted-meta: #888888;
+  --hairline: #f0dfe6;
+
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "Berkeley Mono", "JetBrains Mono", "IBM Plex Mono", ui-monospace,
+    "SFMono-Regular", Menlo, Consolas, monospace;
 }
 
 /* ============================================
@@ -21,45 +33,106 @@
 body {
   background-color: var(--background-color);
   color: var(--text-color);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: var(--font-body);
   font-size: 1em;
   line-height: 1.3;
   margin: 0 auto;
-  padding: 50px;
-  max-width: 36em;
+  /* Top spacing lives on the sticky header instead, so it holds when stuck */
+  padding: 0 2.25rem 1.5rem;
+  max-width: 62em;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Keep running prose readable while the shell stays wide */
+p, ul, ol, blockquote {
+  max-width: 42em;
 }
 
 /* ============================================
-   Navigation
+   Header / Wordmark
    ============================================ */
 .site-nav {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.5rem;
   margin-bottom: 0;
+  /* Stays visible while scrolling; the rule is its border so it travels along */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--background-color);
+  border-bottom: 2px solid var(--accent);
+  padding: 1rem 0 0.75rem;
 }
 
-.site-nav + hr {
-  margin-top: 0;
-  height: 2px;
-}
-
-.site-title {
-  font-weight: 600;
+.site-logo {
   text-decoration: none;
-  color: var(--text-color);
-  font-size: 1.1em;
+  display: inline-block;
 }
 
-.nav-link {
-  color: var(--muted-meta);
+.site-logo:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   Header Links
+   ============================================ */
+.site-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  font-family: var(--font-mono);
+  font-size: 1.2rem;
+}
+
+/* inline-flex drops the whitespace node Typst emits between slash and label */
+.nav-item {
+  display: inline-flex;
+  align-items: baseline;
+  color: var(--accent-dark);
   text-decoration: none;
-  font-size: 0.85em;
 }
 
-.nav-link:hover {
+/* Hovering turns the whole item, slash included, black */
+.nav-item:hover,
+.nav-item:focus-visible {
   color: var(--text-color);
-  text-decoration: underline;
+  opacity: 1;
+}
+
+/* The slash stays black in every state; only the label shifts on hover */
+.nav-slash {
+  color: var(--text-color);
+}
+
+.logo-glyphs {
+  font-family: var(--font-mono);
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.02em;
+  color: var(--accent);
+  display: inline-flex;
+  white-space: pre;
+  user-select: none;
+}
+
+/* Fixed-width cells so scrambling glyphs never shift the wordmark */
+.glyph {
+  display: inline-block;
+  width: 1ch;
+  text-align: center;
+}
+
+/* The caret, and any glyph resolved into the title, read black */
+.glyph.cursor,
+.glyph.locked {
+  color: var(--text-color);
 }
 
 /* ============================================
@@ -103,11 +176,35 @@ img, video {
 }
 
 /* ============================================
+   Coming Soon + Nyan Cat (about page)
+   ============================================ */
+.coming-soon {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  max-width: none;
+}
+
+.nyan {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nyan img {
+  /* Pixel art: keep the blocks hard-edged instead of smoothed */
+  image-rendering: pixelated;
+  height: 2.75rem;
+  width: auto;
+  max-width: none;
+  margin: 0;
+}
+
+/* ============================================
    Code
    ============================================ */
 code {
-  font-family: 'Courier New', monospace;
-  background-color: #f5f5f5;
+  font-family: var(--font-mono);
+  background-color: #f7f2f4;
   padding: 0.2em 0.4em;
   border-radius: 3px;
   font-size: 0.9em;
@@ -144,26 +241,40 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 }
 
 /* ============================================
-   Search
+   Search Block
    ============================================ */
+.search-block {
+  max-width: 35rem;
+  width: 100%;
+  margin: 3.25rem auto 0;
+}
+
 .search-container {
-  margin: 1.5em 0 0.75em 0;
+  margin: 0;
 }
 
 #search {
   width: 100%;
-  padding: 0.75em 1em;
-  font-size: 1em;
-  font-family: inherit;
-  border: 1px solid var(--pill-border);
-  border-radius: 4px;
+  padding: 0.85em 1em;
+  font-size: 1.05em;
+  font-family: var(--font-mono);
+  color: var(--text-color);
+  background-color: var(--search-bg);
+  border: none;
+  border-radius: 6px;
   box-sizing: border-box;
   outline: none;
-  transition: border-color 0.15s ease;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+#search::placeholder {
+  color: var(--search-placeholder);
+  opacity: 1;
 }
 
 #search:focus {
-  border-color: var(--text-color);
+  background-color: var(--search-bg-focus);
+  box-shadow: 0 0 0 2px var(--accent);
 }
 
 /* ============================================
@@ -172,39 +283,55 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 .filter-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5em;
-  margin: 0.75em 0 0.5em 0;
+  gap: 0.6em;
+  margin: 1.1em 0 0;
 }
 
 .pill {
-  padding: 0.35em 0.85em;
-  font-size: 0.85em;
-  font-family: inherit;
-  border: 1px solid var(--pill-border);
+  padding: 0.5em 1.1em;
+  font-size: 1em;
+  font-family: var(--font-mono);
+  border: none;
   border-radius: 999px;
-  background: var(--pill-bg);
-  color: var(--text-color);
+  background: var(--accent);
+  color: var(--accent-ink);
   cursor: pointer;
-  transition: background 0.15s ease, color 0.15s ease;
+  transition: background 0.15s ease;
 }
 
 .pill:hover {
-  border-color: var(--text-color);
+  background: var(--accent-dark);
+}
+
+.pill:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 2px;
 }
 
 .pill.active {
-  background: var(--pill-active-bg);
-  color: var(--pill-active-text);
-  border-color: var(--pill-active-bg);
+  background: var(--accent-dark);
 }
 
 /* ============================================
    Results Count
    ============================================ */
 #results-count {
+  font-family: var(--font-mono);
   color: var(--muted-meta);
   font-size: 0.85em;
-  margin-bottom: 1em;
+  margin-top: 1em;
+  min-height: 1.2em;
+}
+
+/* ============================================
+   Intro
+   ============================================ */
+.site-intro {
+  max-width: 35rem;
+  margin: 2.5rem auto 0;
+  color: var(--blockquote-text);
+  font-size: 0.95em;
+  line-height: 1.45;
 }
 
 /* ============================================
@@ -212,7 +339,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    ============================================ */
 .resource-item {
   padding: 0.6em 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid var(--hairline);
 }
 
 .resource-name {
@@ -245,15 +372,68 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 /* ============================================
    Archive Grid Section Headings
    ============================================ */
+#archive-grid {
+  margin-top: 1.5rem;
+}
+
 #archive-grid h2 {
+  font-family: var(--font-mono);
   color: var(--section-heading-color);
   font-size: 0.95em;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid var(--pill-border);
+  border-bottom: 1px solid var(--accent);
   padding-bottom: 0.25em;
   margin-top: 2em;
   margin-bottom: 0.5em;
+}
+
+/* ============================================
+   Footer
+   ============================================ */
+.site-footer {
+  margin-top: auto;
+  padding-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-marks {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.footer-mark {
+  width: 3.6rem;
+  height: 3.6rem;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+
+.footer-mark:hover {
+  background: var(--accent-dark);
+  opacity: 1;
+}
+
+.footer-tagline {
+  margin: 0;
+  max-width: none;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  color: var(--muted-meta);
+  text-align: center;
 }
 
 /* ============================================
@@ -261,16 +441,38 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    ============================================ */
 @media (max-width: 600px) {
   body {
-    padding: 12px;
+    /* No top padding — the sticky header supplies it */
+    padding: 0 1rem 1rem;
     font-size: 0.9em;
   }
 
+  .logo-glyphs {
+    font-size: 1.4rem;
+  }
+
+  .site-links {
+    font-size: 0.95rem;
+    gap: 0.5rem;
+  }
+
+  .search-block {
+    margin-top: 2rem;
+  }
+
+  .footer-tagline {
+    font-size: 1rem;
+  }
+
   .filter-pills {
-    gap: 0.35em;
+    gap: 0.4em;
   }
 
   .pill {
-    font-size: 0.78em;
-    padding: 0.3em 0.65em;
+    font-size: 0.85em;
+    padding: 0.4em 0.8em;
+  }
+
+  .site-footer {
+    padding-top: 2.5rem;
   }
 }

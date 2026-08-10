@@ -1,14 +1,14 @@
-version = "0.2.1"
+version = "0.5.1"
 content_dir = "content"
 
 [html.spine]
-vertebrae = ["*.typ"]
+exclude = ["data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ"]
 
 [pdf.spine]
 title = "Hacker Archives"
-vertebrae = ["index.typ"]
 merge = true
+exclude = ["about.typ", "contribute.typ", "data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ", "site.typ"]
 
 [epub.spine]
 title = "Hacker Archives"
-vertebrae = ["index.typ", "about.typ"]
+exclude = ["contribute.typ", "data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ", "site.typ"]
