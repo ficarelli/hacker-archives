@@ -6,7 +6,9 @@ echo "=== Starting build ==="
 echo "Timestamp: $(date)"
 
 REPO_DIR="$(pwd)"
-RHEO_VERSION="v0.1.2"
+# Must match the `version` field in rheo.toml — older rheo cannot parse the
+# current config schema.
+RHEO_VERSION="v0.5.1"
 RHEO_CACHE="$REPO_DIR/.rheo-binary"
 RHEO_BIN="$RHEO_CACHE/rheo"
 

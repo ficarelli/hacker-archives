@@ -24,7 +24,9 @@ jobs:
 
       - name: Install rheo
         run: |
-          RHEO_VERSION="v0.1.2"
+          # Must match the `version` field in rheo.toml — older rheo cannot
+          # parse the current config schema.
+          RHEO_VERSION="v0.5.1"
           curl -sL "https://github.com/freecomputinglab/rheo/releases/download/${RHEO_VERSION}/rheo-x86_64-unknown-linux-gnu.zip" -o /tmp/rheo.zip
           unzip -o /tmp/rheo.zip -d /usr/local/bin
           rm /tmp/rheo.zip
