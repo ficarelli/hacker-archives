@@ -592,6 +592,13 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   /* A raw url has no spaces to break at and would otherwise force the page
      wide; these are long. */
   overflow-wrap: anywhere;
+
+  /* rookery draws its own 2px underline under an outbound link on hover and
+     reads this property for the colour, defaulting to the id's pink — which
+     would leave a line in a second colour under green text. Set here rather
+     than fought on specificity: the package invites the override, and a custom
+     property inherits past any selector contest. */
+  --idea-external-color: var(--green);
 }
 
 .listing-url a {
@@ -599,8 +606,18 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   text-decoration: none;
 }
 
+/* The url itself turns green — no fill, the way the nav entries turn rather than
+   the way the `[hack:…]` permalink fills. An outbound link is prose, not a chip,
+   and a highlight band drawn across a wrapped url is more mark than the hover
+   needs.
+
+   The mint is about 1.9:1 on white, so the green is carrying the hovered state
+   here and not the reading: the underline stays for that, and the url's own text
+   is legible at rest in `--accent-dark`. Chosen deliberately over the filled
+   treatment. */
 .listing-url a:hover {
   text-decoration: underline;
+  color: var(--green);
   opacity: 1;
 }
 
