@@ -475,7 +475,18 @@
 }
 
 #let template(current-page: none, doc) = {
+  // `prefix` replaces rookery's default `idea`, so a listing's id reads
+  // `hack:phrack` and its permalink shows as `[hack:phrack]`. Like the theme it
+  // is ONE document-wide value that every vertebra has to agree on, which is why
+  // it is set in this one file.
+  //
+  // It changes the Typst label namespace and the visible id, and nothing else:
+  // the minted pages stay at `ideas/<slug>.html`, because the package derives
+  // that directory from a constant rather than from the prefix. So no url moves
+  // and no inbound link breaks. The `idea-*` CSS classes are likewise the
+  // package's own names, unaffected by this.
   show: rookery.with(
+    prefix: "hack",
     theme: THEME,
     idea-page-template: idea-page,
     window-depth: 0,
