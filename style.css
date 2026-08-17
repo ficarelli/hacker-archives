@@ -16,15 +16,21 @@
   --search-bg-focus: #e0b3c5;
   --search-placeholder: #7d4b63;
 
-  /* Two pinks for the two kinds of tag. Every pill and every chip is the same
-     shape and size — these are the entire difference between a grouping and a
-     subject, so they are named once here and used at both scales. */
+  /* Two pinks for the two kinds of tag, used by the chips inside a listing body,
+     where telling a grouping from a subject at a glance is the whole point. */
   --tag-category-bg: #b05f80;
-  --tag-category-bg-active: #8f4a67;
   --tag-category-ink: #ffffff;
   --tag-subject-bg: #f0d3de;
-  --tag-subject-bg-active: #e3b6c8;
   --tag-subject-ink: #7d4b63;
+
+  /* The filter pills are one colour whatever they select, so the only pill that
+     differs is `All` — which takes `--accent-dark`. Selection is carried by the
+     ring instead of by a fill, which is what frees the darker pink to mean `All`
+     and nothing else. */
+  --pill-bg: #b05f80;
+  --pill-bg-hover: #9d5372;
+  --pill-ink: #ffffff;
+  --pill-ring: #4ed693;
 
   --blockquote-border: #e6e6e6;
   --blockquote-text: #606060;
@@ -468,10 +474,12 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   font-family: var(--font-mono);
   border: none;
   border-radius: 999px;
-  background: var(--accent);
-  color: var(--accent-ink);
+  background: var(--pill-bg);
+  color: var(--pill-ink);
   cursor: pointer;
-  transition: background 0.15s ease;
+  /* `box-shadow` too, so the selection ring fades in with the fill rather than
+     snapping on. */
+  transition: background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .pill:focus-visible {
@@ -479,46 +487,34 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   outline-offset: 2px;
 }
 
-/* Groupings — the deep mauve of the wordmark, on white. */
-.pill.is-category {
-  background: var(--tag-category-bg);
-  color: var(--tag-category-ink);
-}
-
-.pill.is-category:hover {
-  background: var(--tag-category-bg-active);
-}
-
-/* Subjects — the pale pink, with plum text. Same pill, different colour. */
+/* Groupings and subjects are the same colour as well as the same shape. The
+   `is-category`/`is-subject` classes stay on them regardless — index.js reads
+   them to decide whether a pill widens the selection or narrows it — they just
+   no longer say anything visually. */
+.pill.is-category,
 .pill.is-subject {
-  background: var(--tag-subject-bg);
-  color: var(--tag-subject-ink);
+  background: var(--pill-bg);
+  color: var(--pill-ink);
 }
 
+.pill.is-category:hover,
 .pill.is-subject:hover {
-  background: var(--tag-subject-bg-active);
+  background: var(--pill-bg-hover);
 }
 
 /* Several pills can be lit at once, so being ON must not look like being
-   hovered — a darker fill alone said both, and with one-at-a-time selection
-   that ambiguity never showed. The ring is what separates them.
-
-   `currentColor` so it works for either kind without a third colour: white on
-   the mauve groupings, plum on the pale-pink subjects. */
+   hovered. A green ring carries it — and carries it alone, with the fill left
+   as it is: a darker fill for "selected" would collide with `All`, which is now
+   the one pill that owns the darker pink. */
 .pill.active.is-category,
 .pill.active.is-subject {
-  background: var(--tag-category-bg-active);
-  box-shadow: inset 0 0 0 2px currentColor;
-}
-
-.pill.active.is-subject {
-  background: var(--tag-subject-bg-active);
+  box-shadow: inset 0 0 0 2px var(--pill-ring);
 }
 
 /* `All` is neither kind — it clears the others rather than naming a tag, and is
-   lit exactly when nothing else is — so it takes the plain darkened accent and
-   no ring, having nothing to be told apart from. */
-.pill.active:not(.is-category):not(.is-subject) {
+   lit exactly when nothing else is — so it is the darker pink at all times, and
+   takes no ring, having nothing to be told apart from. */
+.pill:not(.is-category):not(.is-subject) {
   background: var(--accent-dark);
 }
 
