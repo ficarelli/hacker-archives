@@ -463,7 +463,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 .filter-pills {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.35em;
+  gap: 0.3em;
   margin: 1.1em 0 0;
 }
 
@@ -472,8 +472,8 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    two rows read as two kinds of the same control rather than a primary and a
    secondary one. */
 .pill {
-  padding: 0.3em 0.7em;
-  font-size: 0.78em;
+  padding: 0.2em 0.55em;
+  font-size: 0.68em;
   font-family: var(--font-mono);
   border: none;
   border-radius: 999px;
@@ -789,9 +789,11 @@ h4.idea {
     font-size: 1rem;
   }
 
+  /* Body text is already 0.9em here, so the pills scale with it; this only keeps
+     them from being the widest thing on a narrow screen. */
   .pill {
-    font-size: 0.72em;
-    padding: 0.25em 0.6em;
+    font-size: 0.66em;
+    padding: 0.2em 0.5em;
   }
 
   .site-footer {
