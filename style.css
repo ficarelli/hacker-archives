@@ -649,9 +649,18 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    Adding the element selector puts this at (0,2,1) against its (0,2,0) and
    settles it without an importance flag.
 
-   `opacity` because this file's global `a:hover` dims every link. */
+   `opacity` because this file's global `a:hover` dims every link.
+
+   The `.idea-window` pair is the landing page. An entry there is a transcluded
+   window, so its id matches the package's `.idea-window a:not([href^="http"])`
+   hover as well — and that selector is (0,3,1), which outranks the bare
+   `a.idea-label` above and was painting the window's own pink wash instead. The
+   `:not()` is carried over to reach (0,4,1) rather than tie again; it costs
+   nothing, since a permalink is internal by definition. */
 a.idea-label:hover,
-a.idea-label:focus-visible {
+a.idea-label:focus-visible,
+.idea-window a.idea-label:not([href^="http"]):hover,
+.idea-window a.idea-label:not([href^="http"]):focus-visible {
   background-color: var(--green);
   color: var(--text-color);
   opacity: 1;
