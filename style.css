@@ -16,6 +16,16 @@
   --search-bg-focus: #e0b3c5;
   --search-placeholder: #7d4b63;
 
+  /* Two pinks for the two kinds of tag. Every pill and every chip is the same
+     shape and size — these are the entire difference between a grouping and a
+     subject, so they are named once here and used at both scales. */
+  --tag-category-bg: #b05f80;
+  --tag-category-bg-active: #8f4a67;
+  --tag-category-ink: #ffffff;
+  --tag-subject-bg: #f0d3de;
+  --tag-subject-bg-active: #e3b6c8;
+  --tag-subject-ink: #7d4b63;
+
   --blockquote-border: #e6e6e6;
   --blockquote-text: #606060;
   --section-heading-color: #666666;
@@ -44,11 +54,39 @@ body {
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
+
+  /* @rheo/rookery-search reads these. Set on `body` because the modal's dialog
+     and its trigger are siblings, so a shared ancestor is the only place a
+     property reaches both — and because nothing in the chrome has one of
+     rookery's own `--idea-*` ancestors to inherit from.
+
+     No modal width or height: the package's defaults fit this site, and there is
+     no measurement pointing at a better number. */
+  --rookery-search-fg: var(--text-color);
+  --rookery-search-bg: var(--background-color);
+  --rookery-search-border: var(--accent);
+  --rookery-search-radius: 6px;
+  --rookery-search-hover: rgba(176, 95, 128, 0.12);
+  --rookery-search-id-color: var(--muted-meta);
 }
 
 /* Keep running prose readable while the shell stays wide */
 p, ul, ol, blockquote {
   max-width: 42em;
+}
+
+/* Decorative text needs an accessible name somewhere: the wordmark's glyphs and
+   the footer marks are `aria-hidden`, and this carries the real one. */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
 }
 
 /* ============================================
@@ -70,12 +108,19 @@ p, ul, ol, blockquote {
   padding: 1rem 0 0.75rem;
 }
 
+/* Internal links are emitted by Typst inside a wrapper carrying the class —
+   only Typst can compute a depth-relative href — so the hooks are `.site-logo a`
+   and `.nav-item a`, not the anchors themselves. */
 .site-logo {
+  display: inline-block;
+}
+
+.site-logo a {
   text-decoration: none;
   display: inline-block;
 }
 
-.site-logo:hover {
+.site-logo a:hover {
   opacity: 1;
 }
 
@@ -88,10 +133,16 @@ p, ul, ol, blockquote {
   gap: 0.75rem;
   font-family: var(--font-mono);
   font-size: 1.2rem;
+  /* Pushes the nav and the search that follows it to the far end of the bar */
+  margin-left: auto;
+}
+
+.nav-item {
+  display: inline-flex;
 }
 
 /* inline-flex drops the whitespace node Typst emits between slash and label */
-.nav-item {
+.nav-item a {
   display: inline-flex;
   align-items: baseline;
   color: var(--accent-dark);
@@ -99,8 +150,8 @@ p, ul, ol, blockquote {
 }
 
 /* Hovering turns the whole item, slash included, black */
-.nav-item:hover,
-.nav-item:focus-visible {
+.nav-item a:hover,
+.nav-item a:focus-visible {
   color: var(--text-color);
   opacity: 1;
 }
@@ -133,6 +184,150 @@ p, ul, ol, blockquote {
 .glyph.cursor,
 .glyph.locked {
   color: var(--text-color);
+}
+
+/* ============================================
+   Search — @rheo/rookery-search's modal
+   ============================================
+   The package's own modal, kept as its default design and only themed: it
+   already gives a result list beside a live preview of the matched idea's body,
+   and reimplementing any of that here would drift from the ranking the package
+   pins between its Typst and JavaScript halves.
+
+   Two triggers, one dialog: the icon in the header and the field on the landing
+   page both carry `.rookery-search-trigger` with the same
+   `data-rookery-search-modal`, which is what the package's script binds to.
+
+   The custom properties are set on `body` rather than on the trigger, because
+   `#search-modal` emits the button and its `<dialog>` as SIBLINGS — so a
+   property has to sit on an ancestor common to both. The dialog painting in the
+   browser's top layer changes paint order only, not the tree it inherits
+   through. (The rest of these live in the `body` rule at the top of the file.) */
+body {
+  --rookery-search-mark: rgba(176, 95, 128, 0.22);
+  /* Neutral rather than mauve: a backdrop dims the whole page behind it, and a
+     tinted dim would recolour everything the palette never touches. */
+  --rookery-search-backdrop: rgba(26, 26, 26, 0.4);
+}
+
+/* Site furniture, not writing — mono, like the nav and the wordmark. */
+.rookery-search-input,
+.rookery-search-hint,
+.rookery-search-key,
+.rookery-search-id {
+  font-family: var(--font-mono);
+}
+
+.rookery-search-input::placeholder {
+  color: var(--search-placeholder);
+}
+
+.rookery-search-title {
+  font-family: var(--font-body);
+}
+
+/* The package asks for an undecorated row from inside `@layer rookery-search`,
+   and this file's unlayered `a { text-decoration: underline }` would beat it
+   whatever the order — so the row has to be un-underlined here. */
+.rookery-search-row {
+  text-decoration: none;
+}
+
+/* ---- The nav's search control ---- */
+/* A magnifier and the Ctrl-K rectangle, last in the nav row. It sits inside
+   `.site-links`, so the row's gap and 1.2rem size come from there — but a
+   <button> inherits none of the UA's type or colour, hence `font: inherit`.
+   `center`, not `baseline`: the two children are a picture and a bordered box,
+   neither of which has a text baseline worth aligning the other to. */
+/* No flex `gap`: the slash has to hug the magnifier the way it hugs a word in
+   `/about`, while the key stands off on its own — two different spacings, so
+   they are set on the parts rather than shared by the row. */
+.nav-search {
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  background: none;
+  border: none;
+  font: inherit;
+  cursor: pointer;
+  color: var(--accent-dark);
+}
+
+.nav-search:hover,
+.nav-search:focus-visible {
+  color: var(--text-color);
+}
+
+/* The key is the whole label here rather than a hint beside a word, so it takes
+   the package's own bordered rectangle at a size that reads next to the nav's
+   1.2rem without matching it. `currentColor` for the border means it brightens
+   with the rest of the control on hover. */
+.nav-search .rookery-search-key {
+  margin-left: 0.45em;
+  font-size: 0.68em;
+  letter-spacing: 0.04em;
+  opacity: 0.75;
+}
+
+.nav-search:hover .rookery-search-key {
+  opacity: 1;
+}
+
+.rookery-search-icon {
+  width: 1.05em;
+  height: 1.05em;
+  fill: currentColor;
+}
+
+/* Bigger than the hero field's, not just bigger in `em`: the nav control is only
+   a slash, a glyph and a small box, so it needs the extra size to hold its own
+   beside three words of nav — whereas the hero icon already sits next to a full
+   label at 1.05em and would only crowd it. */
+.nav-search .rookery-search-icon {
+  width: 1.3em;
+  height: 1.3em;
+}
+
+/* ---- The landing page's field ---- */
+/* A button, not an input — it opens the same modal — but it has to read as the
+   search field this site is designed around, so it keeps the soft pink fill and
+   the full width the old input had. */
+.hero-search {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.85em 1em;
+  font-size: 1.05em;
+  font-family: var(--font-mono);
+  text-align: left;
+  color: var(--search-placeholder);
+  background-color: var(--search-bg);
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hero-search:hover {
+  background-color: var(--search-bg-focus);
+}
+
+.hero-search:focus-visible {
+  outline: none;
+  background-color: var(--search-bg-focus);
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+/* Takes the space the placeholder would, pushing the key hint to the far end. */
+.hero-search-label {
+  flex: 1;
+}
+
+.hero-search .rookery-search-key {
+  font-size: 0.78em;
+  opacity: 0.8;
 }
 
 /* ============================================
@@ -253,30 +448,6 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   margin: 0;
 }
 
-#search {
-  width: 100%;
-  padding: 0.85em 1em;
-  font-size: 1.05em;
-  font-family: var(--font-mono);
-  color: var(--text-color);
-  background-color: var(--search-bg);
-  border: none;
-  border-radius: 6px;
-  box-sizing: border-box;
-  outline: none;
-  transition: background-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-#search::placeholder {
-  color: var(--search-placeholder);
-  opacity: 1;
-}
-
-#search:focus {
-  background-color: var(--search-bg-focus);
-  box-shadow: 0 0 0 2px var(--accent);
-}
-
 /* ============================================
    Filter Pills
    ============================================ */
@@ -287,6 +458,10 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   margin: 1.1em 0 0;
 }
 
+/* ONE pill, everywhere. A grouping and a subject are the same shape, the same
+   size and the same type; colour is the only thing that separates them, so the
+   two rows read as two kinds of the same control rather than a primary and a
+   secondary one. */
 .pill {
   padding: 0.5em 1.1em;
   font-size: 1em;
@@ -299,17 +474,41 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   transition: background 0.15s ease;
 }
 
-.pill:hover {
-  background: var(--accent-dark);
-}
-
 .pill:focus-visible {
   outline: 2px solid var(--text-color);
   outline-offset: 2px;
 }
 
-.pill.active {
+/* Groupings — the deep mauve of the wordmark, on white. */
+.pill.is-category {
+  background: var(--tag-category-bg);
+  color: var(--tag-category-ink);
+}
+
+.pill.is-category:hover,
+.pill.is-category.active {
+  background: var(--tag-category-bg-active);
+}
+
+/* Subjects — the pale pink, with plum text. Same pill, different colour. */
+.pill.is-subject {
+  background: var(--tag-subject-bg);
+  color: var(--tag-subject-ink);
+}
+
+.pill.is-subject:hover,
+.pill.is-subject.active {
+  background: var(--tag-subject-bg-active);
+}
+
+/* `All` is neither kind — it clears the others rather than naming a tag — so it
+   keeps the plain accent fill and only darkens when it is the live one. */
+.pill.active:not(.is-category):not(.is-subject) {
   background: var(--accent-dark);
+}
+
+.filter-subjects {
+  margin-top: 0.6em;
 }
 
 /* ============================================
@@ -335,38 +534,127 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 }
 
 /* ============================================
-   Resource Items
-   ============================================ */
-.resource-item {
-  padding: 0.6em 0;
-  border-bottom: 1px solid var(--hairline);
+   Listings as ideas
+   ============================================
+   A listing is an `#idea`, so it appears in three places with three different
+   bits of rookery markup: as a `.idea-box` on the `listings/` page that hatched
+   it, as an `.idea-window` inside our own `.listing-window` wrapper on a view
+   page, and as the body of its own minted `ideas/<id>.html`. The body classes
+   below are ours and are common to all three. */
+/* The meta line — authors, director, year. It is a bare `<em>` rather than a
+   classed paragraph because rookery-search's body extraction cannot see through
+   a `context` block, and this is the text people search an archive by; see the
+   note in site.typ. Direct child only, so emphasis written inside a description
+   is left alone. */
+.idea-box > em,
+.idea-window-body > em:first-child {
+  display: inline-block;
+  color: var(--muted-meta);
+  font-size: 0.88em;
+  font-style: normal;
 }
 
-.resource-name {
-  font-size: 1em;
+.listing-url {
+  margin: 0.3em 0 0;
+  font-family: var(--font-mono);
+  font-size: 0.8em;
+  /* A raw url has no spaces to break at and would otherwise force the page
+     wide; these are long. */
+  overflow-wrap: anywhere;
 }
 
-.resource-name a {
+.listing-url a {
+  color: var(--accent-dark);
   text-decoration: none;
 }
 
-.resource-name a:hover {
+.listing-url a:hover {
   text-decoration: underline;
   opacity: 1;
 }
 
-.resource-meta {
-  display: block;
-  color: var(--muted-meta);
-  font-size: 0.88em;
-  margin-top: 0.15em;
+.listing-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3em;
+  margin: 0.5em 0 0;
+  max-width: none;
 }
 
-.resource-desc {
-  margin: 0.25em 0 0 0;
-  font-size: 0.92em;
-  color: #555555;
-  line-height: 1.4;
+/* The same pill as the filters, scaled down: fully rounded, filled, and told
+   apart by the same two colours. A chip inside a listing body is metadata rather
+   than a control, so it is smaller — but it is not a different shape. */
+.listing-tag {
+  font-family: var(--font-mono);
+  font-size: 0.7em;
+  letter-spacing: 0.03em;
+  border-radius: 999px;
+  padding: 0.2em 0.6em;
+}
+
+.listing-tag.is-category {
+  background: var(--tag-category-bg);
+  color: var(--tag-category-ink);
+}
+
+.listing-tag.is-subject {
+  background: var(--tag-subject-bg);
+  color: var(--tag-subject-ink);
+}
+
+/* ---- A window on a listing, on the view pages ---- */
+.listing-window {
+  padding: 0.35em 0;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.listing-window:last-child {
+  border-bottom: none;
+}
+
+.listing-window[hidden] {
+  display: none;
+}
+
+/* rookery brackets every window in a `<figure>`, and only its inline margins are
+   reset upstream — the UA's 1em block margins would leave a 74-row list very
+   loose. */
+.listing-window figure {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* The package's left rule is kept: it is what says this content lives
+   elsewhere. Only the fold arrow's spacing is ours. */
+.listing-window .idea-window {
+  border-radius: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+.listing-window .idea-window-title {
+  font-weight: normal;
+}
+
+.listing-window .idea-window-details[open] .idea-window-title {
+  font-weight: bold;
+}
+
+.listing-window .idea-window-body {
+  padding: 0.35em 0 0.4em;
+}
+
+/* ---- A hatched listing, on the `listings/` pages ---- */
+.idea-box {
+  margin: 0.9em 0;
+}
+
+h2.idea,
+h3.idea,
+h4.idea {
+  font-family: var(--font-body);
+  font-size: 1.05em;
+  margin: 0 0 0.2em;
 }
 
 /* ============================================
@@ -388,6 +676,22 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   margin-bottom: 0.5em;
 }
 
+/* The heading links to the page that hatched the section's ideas. */
+#archive-grid h2 a {
+  color: inherit;
+  text-decoration: none;
+}
+
+#archive-grid h2 a:hover {
+  color: var(--accent-dark);
+  opacity: 1;
+}
+
+/* A section the pills emptied is hidden outright, heading and all. */
+[data-section][hidden] {
+  display: none;
+}
+
 /* ============================================
    Footer
    ============================================ */
@@ -406,7 +710,13 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   gap: 1rem;
 }
 
+/* Like the nav, the internal mark wraps a Typst-emitted anchor, so the circle
+   is drawn on the anchor in both cases and the wrapper only carries the class. */
 .footer-mark {
+  display: inline-flex;
+}
+
+.footer-mark a {
   width: 3.6rem;
   height: 3.6rem;
   border-radius: 50%;
@@ -422,7 +732,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   flex: none;
 }
 
-.footer-mark:hover {
+.footer-mark a:hover {
   background: var(--accent-dark);
   opacity: 1;
 }
@@ -454,6 +764,11 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
     font-size: 0.95rem;
     gap: 0.5rem;
   }
+
+  /* Nothing here for the search control: the package's own stylesheet already
+     hides `.rookery-search-key` below this width, which leaves the magnifier as
+     the trigger — the right half to keep, since "Ctrl K" means nothing on a
+     touch screen. Restating it here would only risk the two rules disagreeing. */
 
   .search-block {
     margin-top: 2rem;

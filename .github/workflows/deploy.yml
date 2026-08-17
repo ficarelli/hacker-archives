@@ -25,14 +25,26 @@ jobs:
       - name: Install rheo
         run: |
           # Must match the `version` field in rheo.toml — older rheo cannot
-          # parse the current config schema.
-          RHEO_VERSION="v0.5.1"
-          curl -sL "https://github.com/freecomputinglab/rheo/releases/download/${RHEO_VERSION}/rheo-x86_64-unknown-linux-gnu.zip" -o /tmp/rheo.zip
+          # parse the current config schema, and 0.5.2 is the first release that
+          # processes `@rheo/rookery`'s `.marrow.typ`, which mints the per-idea
+          # pages under `ideas/`. Under 0.5.1 that step is skipped silently.
+          RHEO_VERSION="v0.5.2"
+          # `--fail` so a missing release (a typo'd tag, a yanked build) fails
+          # HERE with an http error, rather than saving GitHub's 404 page as
+          # rheo.zip and failing one line down in `unzip` with nothing to
+          # explain why. The zip stores the binary as -rwxr-xr-x, so unzip
+          # preserves the exec bit and no chmod is needed.
+          curl -sfL "https://github.com/freecomputinglab/rheo/releases/download/${RHEO_VERSION}/rheo-x86_64-unknown-linux-gnu.zip" -o /tmp/rheo.zip
           unzip -o /tmp/rheo.zip -d /usr/local/bin
           rm /tmp/rheo.zip
+          rheo --version
 
+      # `--html` only. This job publishes `build/html` and nothing else, so
+      # building the PDF and the EPUB here costs time and — worse — lets a
+      # regression in either one fail the Pages deploy for a site that does not
+      # ship them. `./build.sh` still builds all three locally.
       - name: Build site
-        run: rheo compile .
+        run: rheo compile . --html
 
       - uses: actions/upload-pages-artifact@v3
         with:

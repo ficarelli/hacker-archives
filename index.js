@@ -1,82 +1,100 @@
 (function () {
-  var input = document.getElementById("search");
+  /* --------------------------------------------
+     Tag pills.
+
+     Searching is `@rheo/rookery-search`'s job now — its bar matches ids and
+     titles across the whole rookery and navigates to an idea's page, so the
+     text field this file used to filter with is gone. What is left is the one
+     thing the package's bar cannot do: narrow what is already on the page.
+
+     Each window is wrapped in a `.listing-window` carrying `data-tags`, because
+     `.idea-window` — the element rookery emits — carries no tag classes of its
+     own. Reading the wrapper is what lets a pill select a tag that cuts across
+     sections (`malware`, `1990s`) and not just a whole section.
+     -------------------------------------------- */
   var pills = document.querySelectorAll(".pill");
+  var items = document.querySelectorAll(".listing-window");
   var sections = document.querySelectorAll("[data-section]");
   var countEl = document.getElementById("results-count");
-  var activeFilter = ["all"];
+  var activeFilter = "all";
 
-  function normalize(str) {
-    return str.toLowerCase().replace(/[^\w\s]/g, "");
-  }
-
-  function matchesSearch(el, query) {
-    if (!query) return true;
-    var text = normalize(el.textContent);
-    var words = normalize(query).split(/\s+/).filter(Boolean);
-    var idx = 0;
-    for (var i = 0; i < words.length; i++) {
-      var found = text.indexOf(words[i], idx);
-      if (found === -1) return false;
-      idx = found + words[i].length;
-    }
-    return true;
+  function tagsOf(el) {
+    return (el.getAttribute("data-tags") || "").split(/\s+/);
   }
 
   function matchesFilter(el) {
-    if (activeFilter[0] === "all") return true;
-    return activeFilter.indexOf(el.getAttribute("data-category")) !== -1;
+    return activeFilter === "all" || tagsOf(el).indexOf(activeFilter) !== -1;
   }
 
   function update() {
-    var query = input.value.trim();
     var visible = 0;
-    var total = 0;
 
-    var items = document.querySelectorAll(".resource-item");
     for (var i = 0; i < items.length; i++) {
-      total++;
-      var show = matchesSearch(items[i], query) && matchesFilter(items[i]);
-      items[i].style.display = show ? "" : "none";
+      var show = matchesFilter(items[i]);
+      items[i].hidden = !show;
       if (show) visible++;
     }
 
+    /* A section with nothing left in it goes away rather than leaving a bare
+       heading behind. */
     for (var j = 0; j < sections.length; j++) {
-      var sectionItems = sections[j].querySelectorAll(".resource-item");
-      var anyVisible = false;
-      for (var k = 0; k < sectionItems.length; k++) {
-        if (sectionItems[k].style.display !== "none") {
-          anyVisible = true;
+      var kids = sections[j].querySelectorAll(".listing-window");
+      var any = false;
+      for (var k = 0; k < kids.length; k++) {
+        if (!kids[k].hidden) {
+          any = true;
           break;
         }
       }
-      sections[j].style.display = anyVisible ? "" : "none";
+      sections[j].hidden = !any;
     }
 
     if (countEl) {
-      var filtering = query || activeFilter[0] !== "all";
-      if (!filtering) {
+      if (activeFilter === "all") {
         countEl.textContent = "";
       } else if (visible === 0) {
-        countEl.textContent = "No entries yet";
+        countEl.textContent = "No entries tagged " + activeFilter;
       } else {
-        countEl.textContent = "Showing " + visible + " of " + total + " resources";
+        countEl.textContent =
+          "Showing " + visible + " of " + items.length + " entries tagged " + activeFilter;
       }
     }
   }
 
-  if (input) {
-    input.addEventListener("input", update);
+  /* One selection across BOTH pill rows — the groupings and the subjects — so
+     clicking a subject clears the grouping and vice versa. */
+  function select(pill) {
+    for (var q = 0; q < pills.length; q++) {
+      pills[q].classList.remove("active");
+    }
+    pill.classList.add("active");
+    activeFilter = pill.getAttribute("data-filter");
+    update();
   }
 
   for (var p = 0; p < pills.length; p++) {
     pills[p].addEventListener("click", function () {
-      for (var q = 0; q < pills.length; q++) {
-        pills[q].classList.remove("active");
-      }
-      this.classList.add("active");
-      activeFilter = this.getAttribute("data-filter").split(/\s+/);
-      update();
+      select(this);
     });
+  }
+
+  /* `index.html#malware` opens on that tag, so a filtered view can be linked
+     to. Ignored when the fragment names no pill — it is then an ordinary
+     same-page anchor and belongs to the browser. */
+  function applyHash() {
+    var want = (window.location.hash || "").replace(/^#/, "");
+    if (!want) return;
+    for (var i = 0; i < pills.length; i++) {
+      if (pills[i].getAttribute("data-filter") === want) {
+        select(pills[i]);
+        return;
+      }
+    }
+  }
+
+  if (pills.length) {
+    applyHash();
+    window.addEventListener("hashchange", applyHash);
   }
 
   /* --------------------------------------------

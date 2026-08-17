@@ -7,8 +7,11 @@ echo "Timestamp: $(date)"
 
 REPO_DIR="$(pwd)"
 # Must match the `version` field in rheo.toml — older rheo cannot parse the
-# current config schema.
-RHEO_VERSION="v0.5.1"
+# current config schema, and 0.5.2 is the first release that processes
+# `@rheo/rookery`'s `.marrow.typ`, which is what mints the per-idea pages under
+# `ideas/`. Under 0.5.1 that step is skipped silently and every search result
+# links to a file that was never written.
+RHEO_VERSION="v0.5.2"
 RHEO_CACHE="$REPO_DIR/.rheo-binary"
 RHEO_BIN="$RHEO_CACHE/rheo"
 

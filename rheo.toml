@@ -1,14 +1,83 @@
-version = "0.5.1"
+# Minted idea pages come from `@rheo/rookery`'s `.marrow.typ`, which rheo only
+# processes from 0.5.2 on — under 0.5.1 it is silently skipped, leaving the
+# search index pointing at `ideas/*.html` files that were never written.
+version = "0.5.2"
 content_dir = "content"
 
-[html.spine]
-exclude = ["data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ"]
+# `site.typ` is a library, not a page, and everything under `data/` is a plain
+# dictionary — without this each would compile to a page of its own. Global, so
+# it holds for every format.
+[spine]
+exclude = [
+  "site.typ",
+  "data/artifacts.typ",
+  "data/books.typ",
+  "data/digital-archives.typ",
+  "data/documentaries.typ",
+  "data/events.typ",
+  "data/funding.typ",
+  "data/hacker-archives.typ",
+  "data/magazines.typ",
+  "data/people.typ",
+  "data/practice.typ",
+  "data/tools.typ",
+]
 
+# Declared as assets rather than written into the page by hand, so rheo emits
+# them depth-relative: the site is now more than one level deep (`listings/`,
+# and the `ideas/` pages rookery mints), where a bare `index.js` would 404.
+[[html.assets]]
+css_stylesheet = "./style.css"
+
+[[html.assets]]
+js_scripts = "./index.js"
+
+# A per-format `exclude` REPLACES the global one rather than adding to it
+# (MEASURED: with only the four view pages listed here, `data/*.typ` and
+# `site.typ` both came back as chapters in the EPUB), so each list below repeats
+# everything above and then adds its own.
+#
+# `index.typ` and `resources.typ` are views — windows onto ideas hatched under
+# `listings/` — so including them in a paged target would print every entry
+# twice, once as a window and once where it was hatched.
 [pdf.spine]
 title = "Hacker Archives"
 merge = true
-exclude = ["about.typ", "contribute.typ", "data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ", "site.typ"]
+exclude = [
+  "site.typ",
+  "data/artifacts.typ",
+  "data/books.typ",
+  "data/digital-archives.typ",
+  "data/documentaries.typ",
+  "data/events.typ",
+  "data/funding.typ",
+  "data/hacker-archives.typ",
+  "data/magazines.typ",
+  "data/people.typ",
+  "data/practice.typ",
+  "data/tools.typ",
+  "about.typ",
+  "contribute.typ",
+  "index.typ",
+  "resources.typ",
+]
 
 [epub.spine]
 title = "Hacker Archives"
-exclude = ["contribute.typ", "data/artifacts.typ", "data/books.typ", "data/digital-archives.typ", "data/documentaries.typ", "data/events.typ", "data/funding.typ", "data/hacker-archives.typ", "data/magazines.typ", "data/people.typ", "data/practice.typ", "data/tools.typ", "site.typ"]
+exclude = [
+  "site.typ",
+  "data/artifacts.typ",
+  "data/books.typ",
+  "data/digital-archives.typ",
+  "data/documentaries.typ",
+  "data/events.typ",
+  "data/funding.typ",
+  "data/hacker-archives.typ",
+  "data/magazines.typ",
+  "data/people.typ",
+  "data/practice.typ",
+  "data/tools.typ",
+  "contribute.typ",
+  "index.typ",
+  "resources.typ",
+]

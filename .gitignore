@@ -1,2 +1,4 @@
 build/
 .abacus/
+# build.sh caches the pinned rheo release here
+.rheo-binary/

@@ -1,22 +1,30 @@
 #let magazines = (
   (
+    id: "2600-magazine",
     name: "2600: The Hacker Quarterly",
     url: "https://archive.org/details/2600magazine",
     description: [Long-running hacker magazine published since 1984, founded by Emmanuel Goldstein. Back issues archived at the Internet Archive.],
+    tags: ("magazines", "zines", "phreaking", "1980s"),
   ),
   (
+    id: "phrack",
     name: "Phrack Magazine",
     url: "https://phrack.org/",
     description: [Underground ezine written by and for hackers, published since 1985.],
+    tags: ("magazines", "zines", "phreaking", "security", "1980s"),
   ),
   (
+    id: "die-datenschleuder",
     name: "Die Datenschleuder",
     url: "https://ds.ccc.de/",
     description: [Scientific journal of the Chaos Computer Club.],
+    tags: ("magazines", "zines", "hacktivism", "1980s"),
   ),
   (
+    id: "hacker-news",
     name: "Hacker News",
     url: "https://news.ycombinator.com/",
     description: [Social news site focused on computing and entrepreneurship.],
+    tags: ("magazines", "2000s"),
   ),
 )
