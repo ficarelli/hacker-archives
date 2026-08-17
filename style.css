@@ -630,24 +630,27 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   color: var(--tag-subject-ink);
 }
 
-/* Hovering a listing's `[hack:…]` permalink turns it the site's green — the same
-   one the nav slashes and the pills' selection ring use.
+/* Hovering a listing's `[hack:…]` permalink fills it with the site's green — the
+   same one the nav slashes and the pills' selection ring use. Only the fill is
+   recoloured; rookery already fills an internal link's background on hover, and
+   the label carries a radius and a little padding, so it reads as a chip.
+
+   The text goes dark for the hovered state. It is not a second idea about the
+   colour: the id's resting pink sits at roughly 1.7:1 on this green and would be
+   unreadable inside its own highlight, where near-black is about 10:1.
 
    `a.idea-label`, not `.idea-label`, and this is the load-bearing part. Unlike
    `rookery-search.css`, rookery's stylesheet is NOT in a cascade layer, and rheo
    links package sheets AFTER the project's own — so a bare `.idea-label:hover`
-   here would tie the package's own rule on specificity and lose on order. Adding
-   the element selector puts this at (0,2,1) against its (0,2,0) and settles it
-   without an importance flag.
+   here would tie the package's own fill rule on specificity and lose on order.
+   Adding the element selector puts this at (0,2,1) against its (0,2,0) and
+   settles it without an importance flag.
 
-   The package fills the background with `--idea-link-color` on any internal-link
-   hover, which on this site is a pink; it is cleared so the green reads on white
-   rather than through a pink wash. `opacity` because this file's global
-   `a:hover` dims every link. */
+   `opacity` because this file's global `a:hover` dims every link. */
 a.idea-label:hover,
 a.idea-label:focus-visible {
-  color: var(--green);
-  background-color: transparent;
+  background-color: var(--green);
+  color: var(--text-color);
   opacity: 1;
 }
 
