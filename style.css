@@ -164,16 +164,17 @@ p, ul, ol, blockquote {
   text-decoration: none;
 }
 
-/* Hovering turns the whole item, slash included, black */
+/* Hovering brings the label up to the slash's green, so the whole entry reads as
+   one colour under the cursor rather than two. */
 .nav-item a:hover,
 .nav-item a:focus-visible {
-  color: var(--text-color);
+  color: var(--green);
   opacity: 1;
 }
 
 /* The slash is the site's green — the same one the pills' selection ring uses —
-   and keeps it in every state; only the label shifts on hover. It sits outside
-   the anchor's own colour for exactly that reason.
+   and keeps it in every state, which is why it sits outside the anchor's own
+   colour. At rest it is the only green in the entry; on hover the label joins it.
 
    Decorative and `aria-hidden`, so this colour carries no meaning a reader has
    to be able to make out. */
@@ -273,9 +274,11 @@ body {
   color: var(--accent-dark);
 }
 
+/* Green on hover like the page links beside it — the icon and the key's border
+   both take `currentColor`, so the whole control turns with it. */
 .nav-search:hover,
 .nav-search:focus-visible {
-  color: var(--text-color);
+  color: var(--green);
 }
 
 /* The key is the whole label here rather than a hint beside a word, so it takes
