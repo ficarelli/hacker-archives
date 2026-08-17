@@ -23,6 +23,10 @@
   --tag-subject-bg: #f0d3de;
   --tag-subject-ink: #7d4b63;
 
+  /* The one green on the site, shared by the pills' selection ring and the nav's
+     slashes so the two cannot drift apart. */
+  --green: #4ed693;
+
   /* The filter pills are one colour whatever they select, so the only pill that
      differs is `All` — which takes `--accent-dark`. Selection is carried by the
      ring instead of by a fill, which is what frees the darker pink to mean `All`
@@ -35,7 +39,7 @@
   --pill-bg: #b05f80;
   --pill-bg-hover: #9d5372;
   --pill-ink: #ffffff;
-  --pill-ring: #4ed693;
+  --pill-ring: var(--green);
 
   --blockquote-border: #e6e6e6;
   --blockquote-text: #606060;
@@ -167,9 +171,14 @@ p, ul, ol, blockquote {
   opacity: 1;
 }
 
-/* The slash stays black in every state; only the label shifts on hover */
+/* The slash is the site's green — the same one the pills' selection ring uses —
+   and keeps it in every state; only the label shifts on hover. It sits outside
+   the anchor's own colour for exactly that reason.
+
+   Decorative and `aria-hidden`, so this colour carries no meaning a reader has
+   to be able to make out. */
 .nav-slash {
-  color: var(--text-color);
+  color: var(--green);
 }
 
 .logo-glyphs {
