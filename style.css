@@ -26,7 +26,12 @@
   /* The filter pills are one colour whatever they select, so the only pill that
      differs is `All` — which takes `--accent-dark`. Selection is carried by the
      ring instead of by a fill, which is what frees the darker pink to mean `All`
-     and nothing else. */
+     and nothing else.
+
+     This fill is deliberately not lighter. A pale pink was tried and reverted:
+     white ink fell to about 1.7:1 on it, unreadable at this size, and the mint
+     ring sat at nearly the same lightness as the fill and all but disappeared.
+     Lightening it means giving up either the white text or the green ring. */
   --pill-bg: #b05f80;
   --pill-bg-hover: #9d5372;
   --pill-ink: #ffffff;
@@ -471,9 +476,11 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    size and the same type; colour is the only thing that separates them, so the
    two rows read as two kinds of the same control rather than a primary and a
    secondary one. */
+/* The type is up from 0.68em for legibility while the padding stays tight: the
+   box is what was eating the width, not the label. */
 .pill {
-  padding: 0.2em 0.55em;
-  font-size: 0.68em;
+  padding: 0.24em 0.62em;
+  font-size: 0.76em;
   font-family: var(--font-mono);
   border: none;
   border-radius: 999px;
@@ -515,8 +522,9 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
 }
 
 /* `All` is neither kind — it clears the others rather than naming a tag, and is
-   lit exactly when nothing else is — so it is the darker pink at all times, and
-   takes no ring, having nothing to be told apart from. */
+   lit exactly when nothing else is — so it keeps the darker pink at all times,
+   and takes no ring, having nothing to be told apart from. Its ink comes from
+   the base rule, both fills being dark enough for white. */
 .pill:not(.is-category):not(.is-subject) {
   background: var(--accent-dark);
 }
@@ -792,8 +800,8 @@ h4.idea {
   /* Body text is already 0.9em here, so the pills scale with it; this only keeps
      them from being the widest thing on a narrow screen. */
   .pill {
-    font-size: 0.66em;
-    padding: 0.2em 0.5em;
+    font-size: 0.72em;
+    padding: 0.22em 0.55em;
   }
 
   .site-footer {
