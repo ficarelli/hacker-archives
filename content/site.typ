@@ -341,6 +341,14 @@
   // One pill shape throughout. A grouping and a subject differ by colour only,
   // so the extra class carries nothing but that; `all` takes neither, being the
   // control that clears the others rather than a tag.
+  //
+  // `is-category`/`is-subject` are read by index.js as well as by the
+  // stylesheet: several pills can be live at once, and which of the two rows a
+  // pill belongs to is what decides whether it widens the selection or narrows
+  // it (see the note there).
+  //
+  // `aria-pressed` because these are toggles now, not a one-of-many choice. It
+  // starts `true` on `All`, which is the state of a page with nothing selected.
   let pill(caption, value) = {
     let kind = if value == "all" {
       "pill active"
@@ -351,7 +359,12 @@
     }
     html.elem(
       "button",
-      attrs: (type: "button", class: kind, "data-filter": value),
+      attrs: (
+        type: "button",
+        class: kind,
+        "data-filter": value,
+        "aria-pressed": if value == "all" { "true" } else { "false" },
+      ),
     )[#caption]
   }
 

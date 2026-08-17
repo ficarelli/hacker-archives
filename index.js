@@ -16,14 +16,76 @@
   var items = document.querySelectorAll(".listing-window");
   var sections = document.querySelectorAll("[data-section]");
   var countEl = document.getElementById("results-count");
-  var activeFilter = "all";
+
+  /* Any number of pills can be live at once, kept in two lists because the two
+     rows combine differently:
+
+       OR within a row, AND across the two.
+
+     So `Books + Films` widens — both groupings show — while `Books + Malware`
+     narrows to books about malware. The other two readings are both worse:
+     AND everywhere makes `Books + Films` empty, since nothing is filed as both,
+     and OR everywhere makes `Books + Malware` mean "all books, plus everything
+     about malware", which is not a question anyone asked.
+
+     Which list a pill joins comes from the same `is-category`/`is-subject`
+     class the stylesheet colours it with, so the rows, the colours and the
+     combining rule cannot disagree. */
+  var activeCategories = [];
+  var activeSubjects = [];
 
   function tagsOf(el) {
     return (el.getAttribute("data-tags") || "").split(/\s+/);
   }
 
+  function kindOf(pill) {
+    if (pill.classList.contains("is-category")) return "category";
+    if (pill.classList.contains("is-subject")) return "subject";
+    return "all";
+  }
+
+  function sharesAny(tags, wanted) {
+    for (var i = 0; i < wanted.length; i++) {
+      if (tags.indexOf(wanted[i]) !== -1) return true;
+    }
+    return false;
+  }
+
+  /* An empty list is not a filter — it means that row is asking nothing. */
   function matchesFilter(el) {
-    return activeFilter === "all" || tagsOf(el).indexOf(activeFilter) !== -1;
+    var tags = tagsOf(el);
+    if (activeCategories.length && !sharesAny(tags, activeCategories)) return false;
+    if (activeSubjects.length && !sharesAny(tags, activeSubjects)) return false;
+    return true;
+  }
+
+  function selected() {
+    return activeCategories.concat(activeSubjects);
+  }
+
+  function toggle(list, tag) {
+    var at = list.indexOf(tag);
+    if (at === -1) {
+      list.push(tag);
+    } else {
+      list.splice(at, 1);
+    }
+  }
+
+  /* Paint every pill from the lists rather than toggling the clicked one, so the
+     buttons cannot drift out of step with the filter they describe — this is
+     also what lets a deep link light several pills at once. */
+  function syncPills() {
+    var live = selected();
+    for (var i = 0; i < pills.length; i++) {
+      var pill = pills[i];
+      var on =
+        kindOf(pill) === "all"
+          ? live.length === 0
+          : live.indexOf(pill.getAttribute("data-filter")) !== -1;
+      pill.classList.toggle("active", on);
+      pill.setAttribute("aria-pressed", on ? "true" : "false");
+    }
   }
 
   function update() {
@@ -50,46 +112,77 @@
     }
 
     if (countEl) {
-      if (activeFilter === "all") {
+      var live = selected();
+      if (live.length === 0) {
         countEl.textContent = "";
       } else if (visible === 0) {
-        countEl.textContent = "No entries tagged " + activeFilter;
+        countEl.textContent = "No entries tagged " + live.join(" + ");
       } else {
         countEl.textContent =
-          "Showing " + visible + " of " + items.length + " entries tagged " + activeFilter;
+          "Showing " + visible + " of " + items.length + " entries · " + live.join(" + ");
       }
     }
   }
 
-  /* One selection across BOTH pill rows — the groupings and the subjects — so
-     clicking a subject clears the grouping and vice versa. */
-  function select(pill) {
-    for (var q = 0; q < pills.length; q++) {
-      pills[q].classList.remove("active");
-    }
-    pill.classList.add("active");
-    activeFilter = pill.getAttribute("data-filter");
+  /* `replaceState`, not a plain hash write: a filter is a view of this page, not
+     a place, so stacking one history entry per pill click would turn Back into
+     an undo button for filtering and strand the reader on the page they arrived
+     from. The url still updates, so a filtered view stays linkable. */
+  function writeHash() {
+    if (!window.history || !window.history.replaceState) return;
+    var live = selected();
+    var url = window.location.pathname + window.location.search;
+    window.history.replaceState(null, "", live.length ? url + "#" + live.join(",") : url);
+  }
+
+  function apply(categories, subjects) {
+    activeCategories = categories;
+    activeSubjects = subjects;
+    syncPills();
     update();
   }
 
   for (var p = 0; p < pills.length; p++) {
     pills[p].addEventListener("click", function () {
-      select(this);
+      var kind = kindOf(this);
+      var tag = this.getAttribute("data-filter");
+      if (kind === "all") {
+        activeCategories = [];
+        activeSubjects = [];
+      } else if (kind === "category") {
+        toggle(activeCategories, tag);
+      } else {
+        toggle(activeSubjects, tag);
+      }
+      syncPills();
+      update();
+      writeHash();
     });
   }
 
-  /* `index.html#malware` opens on that tag, so a filtered view can be linked
-     to. Ignored when the fragment names no pill — it is then an ordinary
-     same-page anchor and belongs to the browser. */
+  /* `index.html#malware` or `#books,films,1990s` opens on those tags, so a
+     filtered view can be linked to. Names that match no pill are dropped rather
+     than failing the whole fragment — and if none match, this is an ordinary
+     same-page anchor and belongs to the browser, so nothing is touched. */
   function applyHash() {
-    var want = (window.location.hash || "").replace(/^#/, "");
-    if (!want) return;
+    var raw = (window.location.hash || "").replace(/^#/, "");
+    if (!raw) return;
+    var wanted = decodeURIComponent(raw).split(",");
+    var categories = [];
+    var subjects = [];
+
     for (var i = 0; i < pills.length; i++) {
-      if (pills[i].getAttribute("data-filter") === want) {
-        select(pills[i]);
-        return;
+      var pill = pills[i];
+      var tag = pill.getAttribute("data-filter");
+      if (wanted.indexOf(tag) === -1) continue;
+      if (kindOf(pill) === "category") {
+        categories.push(tag);
+      } else if (kindOf(pill) === "subject") {
+        subjects.push(tag);
       }
     }
+
+    if (categories.length || subjects.length) apply(categories, subjects);
   }
 
   if (pills.length) {

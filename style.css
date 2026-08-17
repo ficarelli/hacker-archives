@@ -485,8 +485,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   color: var(--tag-category-ink);
 }
 
-.pill.is-category:hover,
-.pill.is-category.active {
+.pill.is-category:hover {
   background: var(--tag-category-bg-active);
 }
 
@@ -496,13 +495,29 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   color: var(--tag-subject-ink);
 }
 
-.pill.is-subject:hover,
-.pill.is-subject.active {
+.pill.is-subject:hover {
   background: var(--tag-subject-bg-active);
 }
 
-/* `All` is neither kind — it clears the others rather than naming a tag — so it
-   keeps the plain accent fill and only darkens when it is the live one. */
+/* Several pills can be lit at once, so being ON must not look like being
+   hovered — a darker fill alone said both, and with one-at-a-time selection
+   that ambiguity never showed. The ring is what separates them.
+
+   `currentColor` so it works for either kind without a third colour: white on
+   the mauve groupings, plum on the pale-pink subjects. */
+.pill.active.is-category,
+.pill.active.is-subject {
+  background: var(--tag-category-bg-active);
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+
+.pill.active.is-subject {
+  background: var(--tag-subject-bg-active);
+}
+
+/* `All` is neither kind — it clears the others rather than naming a tag, and is
+   lit exactly when nothing else is — so it takes the plain darkened accent and
+   no ring, having nothing to be told apart from. */
 .pill.active:not(.is-category):not(.is-subject) {
   background: var(--accent-dark);
 }
