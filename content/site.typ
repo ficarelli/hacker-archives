@@ -373,14 +373,16 @@
       #html.elem("div", attrs: (class: "search-container"))[
         #search-field
       ]
+      // ONE container for both lists, not one per row. They no longer differ in
+      // colour or size, so a second container bought nothing but a seam: the
+      // space between two sibling divs is a margin, which cannot share the
+      // flex `gap` that separates pills everywhere else, so the join between
+      // groupings and subjects always read as wider than a plain wrap. Emitted
+      // in order, the two simply flow into each other.
       #html.elem("div", attrs: (class: "filter-pills", id: "filters"))[
         #for (caption, value) in filters { pill(caption, value) }
+        #for (caption, value) in subjects { pill(caption, value) }
       ]
-      #if subjects.len() > 0 {
-        html.elem("div", attrs: (class: "filter-pills filter-subjects"))[
-          #for (caption, value) in subjects { pill(caption, value) }
-        ]
-      }
       #html.elem("div", attrs: (id: "results-count", role: "status", "aria-live": "polite"))[]
     ]
   }
