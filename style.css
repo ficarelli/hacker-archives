@@ -16,12 +16,10 @@
   --search-bg-focus: #e0b3c5;
   --search-placeholder: #7d4b63;
 
-  /* Two pinks for the two kinds of tag, used by the chips inside a listing body,
-     where telling a grouping from a subject at a glance is the whole point. */
-  --tag-category-bg: #b05f80;
-  --tag-category-ink: #ffffff;
-  --tag-subject-bg: #f0d3de;
-  --tag-subject-ink: #7d4b63;
+  /* One pink for every tag chip inside a listing body, category or subject
+     alike. It was two, one per kind; see the note on `.listing-tag`. */
+  --tag-bg: var(--accent-dark);
+  --tag-ink: #ffffff;
 
   /* The one green on the site, shared by the pills' selection ring and the nav's
      slashes so the two cannot drift apart. */
@@ -629,25 +627,28 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
   max-width: none;
 }
 
-/* The same pill as the filters, scaled down: fully rounded, filled, and told
-   apart by the same two colours. A chip inside a listing body is metadata rather
-   than a control, so it is smaller — but it is not a different shape. */
+/* The same pill as the filters, scaled down: fully rounded and filled. A chip
+   inside a listing body is metadata rather than a control, so it is smaller —
+   but it is not a different shape.
+
+   ONE colour for every chip, whatever kind of tag it carries. `is-category` and
+   `is-subject` are still on the elements — site.typ writes them and index.js
+   reads them for the filter row — they just no longer show. Telling a grouping
+   from a subject at a glance was the point of the two pinks, and it is dropped
+   deliberately: inside a listing body these read as a row of metadata, and the
+   pale subject fill was the one chip on the page carrying dark ink.
+
+   `--accent-dark`, the darker of the site's two pinks, rather than the category
+   pink it replaces: white ink is about 6.3:1 on it against 4.4:1 on `--accent`,
+   which matters at 0.7em, where AA asks for 4.5. */
 .listing-tag {
   font-family: var(--font-mono);
   font-size: 0.7em;
   letter-spacing: 0.03em;
   border-radius: 999px;
   padding: 0.2em 0.6em;
-}
-
-.listing-tag.is-category {
-  background: var(--tag-category-bg);
-  color: var(--tag-category-ink);
-}
-
-.listing-tag.is-subject {
-  background: var(--tag-subject-bg);
-  color: var(--tag-subject-ink);
+  background: var(--tag-bg);
+  color: var(--tag-ink);
 }
 
 /* Hovering a listing's `[hack:…]` permalink fills it with the site's green — the
