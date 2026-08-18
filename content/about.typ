@@ -11,11 +11,11 @@
   html.elem("p", attrs: (class: "coming-soon"))[
     Coming Soon
     #html.elem("span", attrs: (class: "nyan"))[
-      #image("img/nyan-cat.gif", alt: "Nyan Cat running, trailing a rainbow")
+      // #image("img/nyan-cat.gif", alt: "Nyan Cat running, trailing a rainbow")
     ]
   ]
 } else [
   Coming Soon
 ]
 
-This project was built with #link("https://rheo.ohrg.org/")[Rheo].
+

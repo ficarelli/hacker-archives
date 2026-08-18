@@ -5,14 +5,14 @@
 // Wrapping it in `template` is how that requirement gets met once: a page
 // writes `#show: template.with(...)` and gets the chrome, the theme and the
 // `ref` rule together.
-#import "@rheo/rookery:0.2.0": idea, rookery, window
+#import "@rheo/rookery:0.3.0": idea, rookery, window
 // Search ships as its own package, and BOTH imports have to be written here in
 // the site's own files: rheo scans only a project's own `.typ` files for
 // package imports, so a package reached transitively through another one
 // contributes nothing — no stylesheet, no script, and (for rookery) no minted
 // idea pages at all, which would leave the search index with nothing to link
 // to. Being excluded from the spine does not exclude this file from that scan.
-#import "@rheo/rookery-search:0.2.0": search-modal
+#import "@rheo/rookery-search:0.3.0": search-modal
 
 // Rookery's default light-blue/purple pair, replaced with pinks drawn from the
 // wordmark and the h_a mark. ONE document-wide value: every vertebra has to ask
@@ -489,7 +489,6 @@
     prefix: "hack",
     theme: THEME,
     idea-page-template: idea-page,
-    window-depth: 0,
   )
   show: chrome.with(current-page: current-page)
   doc

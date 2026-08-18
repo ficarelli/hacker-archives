@@ -60,7 +60,7 @@
   blurb
 }
 
-#search-block(filters, subjects: subjects)
+// #search-block(filters, subjects: subjects)
 
 #context if target() == "html" {
   html.elem("div", attrs: (id: "archive-grid"))[
