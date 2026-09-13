@@ -68,7 +68,7 @@ body {
   flex-direction: column;
   box-sizing: border-box;
 
-  /* @rheo/rookery-search reads these. Set on `body` because the modal's dialog
+  /* `@rookery/search` reads these. Set on `body` because the modal's dialog
      and its trigger are siblings, so a shared ancestor is the only place a
      property reaches both — and because nothing in the chrome has one of
      rookery's own `--idea-*` ancestors to inherit from.
@@ -206,7 +206,7 @@ p, ul, ol, blockquote {
 }
 
 /* ============================================
-   Search — @rheo/rookery-search's modal
+   Search — `@rookery/search`'s modal
    ============================================
    The package's own modal, kept as its default design and only themed: it
    already gives a result list beside a live preview of the matched idea's body,
@@ -245,7 +245,7 @@ body {
   font-family: var(--font-body);
 }
 
-/* The package asks for an undecorated row from inside `@layer rookery-search`,
+/* The package asks for an undecorated row from inside `@layer search`,
    and this file's unlayered `a { text-decoration: underline }` would beat it
    whatever the order — so the row has to be un-underlined here. */
 .rookery-search-row {
@@ -571,7 +571,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    page, and as the body of its own minted `ideas/<id>.html`. The body classes
    below are ours and are common to all three. */
 /* The meta line — authors, director, year. It is a bare `<em>` rather than a
-   classed paragraph because rookery-search's body extraction cannot see through
+   classed paragraph because `@rookery/search`'s body extraction cannot see through
    a `context` block, and this is the text people search an archive by; see the
    note in site.typ. Direct child only, so emphasis written inside a description
    is left alone. */
@@ -661,7 +661,7 @@ section[role="doc-endnotes"] ol li a[role="doc-backlink"] {
    unreadable inside its own highlight, where near-black is about 10:1.
 
    `a.idea-label`, not `.idea-label`, and this is the load-bearing part. Unlike
-   `rookery-search.css`, rookery's stylesheet is NOT in a cascade layer, and rheo
+   `@rookery/search`'s sheet, `@rookery/core`'s is NOT in a cascade layer, and rheo
    links package sheets AFTER the project's own — so a bare `.idea-label:hover`
    here would tie the package's own fill rule on specificity and lose on order.
    Adding the element selector puts this at (0,2,1) against its (0,2,0) and

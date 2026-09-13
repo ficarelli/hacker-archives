@@ -1,8 +1,22 @@
-# Minted idea pages come from `@rheo/rookery`'s `.marrow.typ`, which rheo only
-# processes from 0.5.2 on — under 0.5.1 it is silently skipped, leaving the
-# search index pointing at `ideas/*.html` files that were never written.
-version = "0.5.2"
+# Minted idea pages come from `@rookery/core`'s `.marrow.typ`. 0.6.2 is the
+# first release that finds the marrow of a package fetched from a repository
+# ref: 0.6.1 located it by probing Typst's directory layout, which a ref-backed
+# checkout (keyed by resolved commit) never matches, so every `ideas/*.html`
+# page went unwritten on a build that succeeded silently.
+version = "0.6.2"
 content_dir = "content"
+
+# `@rookery` is not a namespace rheo ships, so without this table the imports in
+# `content/site.typ` resolve nowhere. The packages live at the repository root
+# as `<name>/<version>/`, which is the layout rheo expects, so no `subdir`.
+#
+# A BRANCH, not a tag: `0.1.0` here is the name of a long-lived branch that
+# carries the 0.1.0 line of the family, and it is re-resolved on every build —
+# so a push to it changes what this project compiles against without any edit
+# here. Pin `rev = "<sha>"` instead if that ever matters.
+[packages.rookery]
+repo = "https://github.com/freecomputinglab/rookery"
+branch = "0.1.0"
 
 # `site.typ` is a library, not a page, and everything under `data/` is a plain
 # dictionary — without this each would compile to a page of its own. Global, so
@@ -42,7 +56,8 @@ js_scripts = "./index.js"
 # twice, once as a window and once where it was hatched.
 [pdf.spine]
 title = "Hacker Archives"
-merge = true
+# No `merge` key: it was retired in rheo 0.6, which warns that it has no effect
+# — a PDF spine is combined into one document by default now.
 exclude = [
   "site.typ",
   "data/artifacts.typ",

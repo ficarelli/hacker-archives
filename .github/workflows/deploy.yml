@@ -24,11 +24,14 @@ jobs:
 
       - name: Install rheo
         run: |
-          # Must match the `version` field in rheo.toml — older rheo cannot
-          # parse the current config schema, and 0.5.2 is the first release that
-          # processes `@rheo/rookery`'s `.marrow.typ`, which mints the per-idea
-          # pages under `ideas/`. Under 0.5.1 that step is skipped silently.
-          RHEO_VERSION="v0.5.2"
+          # Must match the `version` field in rheo.toml, and the floor both
+          # `@rookery/core` and `@rookery/search` declare. 0.6.2 is the first
+          # release that reads the `.marrow.typ` of a package fetched from a
+          # repository ref — how `[packages.rookery]` fetches them — so the
+          # first that mints the per-idea pages under `ideas/`. Under 0.6.1 that
+          # step is skipped silently. This runner is always a clean checkout, so
+          # it is exactly the case where that silence bites.
+          RHEO_VERSION="v0.6.2"
           # `--fail` so a missing release (a typo'd tag, a yanked build) fails
           # HERE with an http error, rather than saving GitHub's 404 page as
           # rheo.zip and failing one line down in `unzip` with nothing to

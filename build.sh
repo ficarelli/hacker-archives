@@ -6,13 +6,18 @@ echo "=== Starting build ==="
 echo "Timestamp: $(date)"
 
 REPO_DIR="$(pwd)"
-# Must match the `version` field in rheo.toml — older rheo cannot parse the
-# current config schema, and 0.5.2 is the first release that processes
-# `@rheo/rookery`'s `.marrow.typ`, which is what mints the per-idea pages under
-# `ideas/`. Under 0.5.1 that step is skipped silently and every search result
-# links to a file that was never written.
-RHEO_VERSION="v0.5.2"
-RHEO_CACHE="$REPO_DIR/.rheo-binary"
+# Must match the `version` field in rheo.toml, and it is also the floor both
+# `@rookery/core` and `@rookery/search` declare. 0.6.2 is the first release that
+# reads the `.marrow.typ` of a package fetched from a repository ref — the way
+# `[packages.rookery]` in rheo.toml fetches them — so it is the first that mints
+# the per-idea pages under `ideas/`. Under 0.6.1 that step is skipped silently
+# and every search result links to a file that was never written.
+RHEO_VERSION="v0.6.2"
+# Keyed by version: the cache is only ever checked for existence, so a shared
+# `.rheo-binary/rheo` would keep serving whatever release was downloaded first
+# and a bump here would quietly do nothing on any machine that had already
+# built once.
+RHEO_CACHE="$REPO_DIR/.rheo-binary/$RHEO_VERSION"
 RHEO_BIN="$RHEO_CACHE/rheo"
 
 if [ ! -f "$RHEO_BIN" ]; then

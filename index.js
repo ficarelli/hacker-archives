@@ -2,7 +2,7 @@
   /* --------------------------------------------
      Tag pills.
 
-     Searching is `@rheo/rookery-search`'s job now — its bar matches ids and
+     Searching is `@rookery/search`'s job now — its bar matches ids and
      titles across the whole rookery and navigates to an idea's page, so the
      text field this file used to filter with is gone. What is left is the one
      thing the package's bar cannot do: narrow what is already on the page.

@@ -1,18 +1,18 @@
-// Site chrome, and the one place `@rheo/rookery` is configured.
+// Site chrome, and the one place `@rookery/core` is configured.
 //
 // `#show: rookery` has to be applied in EVERY vertebra that uses the package —
 // Typst imports are per-file, so no one file can install it for the others.
 // Wrapping it in `template` is how that requirement gets met once: a page
 // writes `#show: template.with(...)` and gets the chrome, the theme and the
 // `ref` rule together.
-#import "@rheo/rookery:0.3.0": idea, rookery, window
+#import "@rookery/core:0.1.0": idea, rookery, window
 // Search ships as its own package, and BOTH imports have to be written here in
 // the site's own files: rheo scans only a project's own `.typ` files for
 // package imports, so a package reached transitively through another one
 // contributes nothing — no stylesheet, no script, and (for rookery) no minted
 // idea pages at all, which would leave the search index with nothing to link
 // to. Being excluded from the spine does not exclude this file from that scan.
-#import "@rheo/rookery-search:0.3.0": search-modal
+#import "@rookery/search:0.1.0": search-modal
 
 // Rookery's default light-blue/purple pair, replaced with pinks drawn from the
 // wordmark and the h_a mark. ONE document-wide value: every vertebra has to ask
@@ -202,7 +202,7 @@
 //
 // One `#idea` per record, which is what gives every listing its own standalone
 // `ideas/<id>.html` page (minted by rookery), its own backlinks, and a place in
-// the search index. `id` is the slug and `name` is the title — rookery-search
+// the search index. `id` is the slug and `name` is the title — `@rookery/search`
 // matches on exactly those two and never on the body, so both have to read the
 // way someone would type them.
 //
@@ -237,7 +237,7 @@
     // PLAIN CONTENT, not a `context`-guarded `html.elem` like the url and tags
     // below, and this is load-bearing rather than a style choice.
     //
-    // `@rheo/rookery-search` from 0.2.0 also matches an idea's BODY, and the
+    // `@rookery/search` also matches an idea's BODY, and the
     // body it matches is a plain-text extraction that walks an element's
     // `children`/`body`. A `context` block has neither, so anything wrapped in
     // one is invisible to it — MEASURED: with the meta line inside `context`,
@@ -298,11 +298,11 @@
 
 // ---- Home-page views ------------------------------------------------------
 
-// Search field and filter pills. The field itself is rookery-search's, which
+// Search field and filter pills. The field itself is `@rookery/search`'s, which
 // matches ids and titles across the whole rookery and navigates to an idea's
 // page; the pills are this site's own and filter what is already on the page.
 // The landing page's search field. NOT a second search: a `.rookery-search-
-// trigger` carrying `data-rookery-search-modal` is what rookery-search's script
+// trigger` carrying `data-rookery-search-modal` is what the package's script
 // binds to `open()`, so this button and the entry in the nav are two doors onto
 // one dialog, one index and one ranking.
 //
@@ -480,13 +480,26 @@
   // is ONE document-wide value that every vertebra has to agree on, which is why
   // it is set in this one file.
   //
-  // It changes the Typst label namespace and the visible id, and nothing else:
-  // the minted pages stay at `ideas/<slug>.html`, because the package derives
-  // that directory from a constant rather than from the prefix. So no url moves
-  // and no inbound link breaks. The `idea-*` CSS classes are likewise the
-  // package's own names, unaffected by this.
+  // It is meant to change the Typst label namespace and the visible id and
+  // NOTHING else, which is why the next two lines exist. `@rookery/core` derives
+  // both the minted directory and the CSS class stem from `prefix` unless told
+  // otherwise, so a bare `prefix: "hack"` would move every minted page from
+  // `ideas/<slug>.html` to `hack/<slug>.html` — breaking every inbound link to
+  // a url this site has already published — and rename the emitted classes to
+  // `hack-*`, which the 20 `.idea-*` rules in `style.css` would then silently
+  // stop matching. Both were hardcoded in the package this site used before, so
+  // pinning them here keeps the urls and the stylesheet exactly as they were.
   show: rookery.with(
     prefix: "hack",
+    note-dir: "ideas",
+    css-prefix: "idea",
+    // Same reasoning, third default: `@rookery/core` mints an `ideas/index.html`
+    // listing every note. Nothing on this site links to it — the nav, the
+    // listings and the minted pages all route through `listings/*.html` and the
+    // search modal instead — and the deployed site has no such url, so leaving
+    // it on would publish one unreachable page. Flip to `true` if an index of
+    // every note ever earns a place in the nav.
+    index-page: false,
     theme: THEME,
     idea-page-template: idea-page,
   )
