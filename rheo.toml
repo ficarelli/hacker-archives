@@ -2,26 +2,33 @@
 # first release that finds the marrow of a package fetched from a repository
 # ref: 0.6.1 located it by probing Typst's directory layout, which a ref-backed
 # checkout (keyed by resolved commit) never matches, so every `ideas/*.html`
-# page went unwritten on a build that succeeded silently.
-version = "0.6.2"
+# page went unwritten on a build that succeeded silently. 0.6.2 is still the
+# floor the packages declare; this site builds on 0.6.4.
+version = "0.6.4"
 content_dir = "content"
 
 # `@rookery` is not a namespace rheo ships, so without this table the imports in
 # `content/site.typ` resolve nowhere. The packages live at the repository root
 # as `<name>/<version>/`, which is the layout rheo expects, so no `subdir`.
 #
-# A BRANCH, not a tag: `0.1.0` here is the name of a long-lived branch that
-# carries the 0.1.0 line of the family, and it is re-resolved on every build —
-# so a push to it changes what this project compiles against without any edit
-# here. Pin `rev = "<sha>"` instead if that ever matters.
+# A BRANCH, not a tag: `dev` is re-resolved on every build, so a push to it
+# changes what this project compiles against without any edit here. The package
+# versions in `content/site.typ`'s imports must be ones `dev` carries (it holds
+# `core/0.1.1` and `search/0.1.1`, and search imports core at 0.1.1). Pin
+# `rev = "<sha>"` instead if that ever matters.
 [packages.rookery]
 repo = "https://github.com/freecomputinglab/rookery"
-branch = "0.1.0"
+branch = "dev"
 
 # `site.typ` is a library, not a page, and everything under `data/` is a plain
 # dictionary — without this each would compile to a page of its own. Global, so
 # it holds for every format.
 [spine]
+# rheo 0.6.3 synthesizes a landing page for any directory without one, which
+# here means an unstyled `listings.html` that nothing links to and the deployed
+# site has never had. Off restores the old group-node behaviour. Unlike
+# `exclude` this key falls back field-by-field, so it holds for every format.
+auto_index = false
 exclude = [
   "site.typ",
   "data/artifacts.typ",

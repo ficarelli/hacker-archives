@@ -5,14 +5,14 @@
 // Wrapping it in `template` is how that requirement gets met once: a page
 // writes `#show: template.with(...)` and gets the chrome, the theme and the
 // `ref` rule together.
-#import "@rookery/core:0.1.0": idea, rookery, window
+#import "@rookery/core:0.1.1": idea, rookery, window
 // Search ships as its own package, and BOTH imports have to be written here in
 // the site's own files: rheo scans only a project's own `.typ` files for
 // package imports, so a package reached transitively through another one
 // contributes nothing — no stylesheet, no script, and (for rookery) no minted
 // idea pages at all, which would leave the search index with nothing to link
 // to. Being excluded from the spine does not exclude this file from that scan.
-#import "@rookery/search:0.1.0": search-modal
+#import "@rookery/search:0.1.1": search-modal
 
 // Rookery's default light-blue/purple pair, replaced with pinks drawn from the
 // wordmark and the h_a mark. ONE document-wide value: every vertebra has to ask
@@ -31,7 +31,7 @@
   link-color: "rgba(214, 100, 150, 0.18)",
   fold-color: "rgba(224, 130, 170, 0.18)",
   border-color: rgb("#dfa3c0"),
-  id-color: rgb("#bb8ca2"),
+  name-color: rgb("#bb8ca2"),
   date-color: rgb("#b07f95"),
 )
 
@@ -491,7 +491,7 @@
   // pinning them here keeps the urls and the stylesheet exactly as they were.
   show: rookery.with(
     prefix: "hack",
-    note-dir: "ideas",
+    idea-dir: "ideas",
     css-prefix: "idea",
     // Same reasoning, third default: `@rookery/core` mints an `ideas/index.html`
     // listing every note. Nothing on this site links to it — the nav, the
