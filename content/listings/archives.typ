@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/hacker-archives.typ": hacker-archives
 
-#show: template.with(current-page: "listings:archives")
+#show: template.with(current-page: "listings:archives", title: "Hacker-specific Archives")
 
 #listing-page(
   "Hacker-specific Archives",

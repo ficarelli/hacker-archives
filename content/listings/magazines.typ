@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/magazines.typ": magazines
 
-#show: template.with(current-page: "listings:magazines")
+#show: template.with(current-page: "listings:magazines", title: "Magazines & Zines")
 
 #listing-page(
   "Magazines & Zines",

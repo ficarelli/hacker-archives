@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/documentaries.typ": documentaries
 
-#show: template.with(current-page: "listings:films")
+#show: template.with(current-page: "listings:films", title: "Films & TV Shows")
 
 #listing-page(
   "Films & TV Shows",

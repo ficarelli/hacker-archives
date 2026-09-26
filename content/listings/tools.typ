@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/tools.typ": tools
 
-#show: template.with(current-page: "listings:tools")
+#show: template.with(current-page: "listings:tools", title: "Tools & Projects")
 
 #listing-page(
   "Tools & Projects",

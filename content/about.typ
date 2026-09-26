@@ -1,6 +1,6 @@
 #import "site.typ": template
 
-#show: template.with(current-page: "about")
+#show: template.with(current-page: "about", title: "About")
 
 = About
 

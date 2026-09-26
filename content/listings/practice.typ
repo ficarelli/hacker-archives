@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/practice.typ": practice
 
-#show: template.with(current-page: "listings:practice")
+#show: template.with(current-page: "listings:practice", title: "Archival Practice Overviews")
 
 #listing-page(
   "Archival Practice Overviews",

@@ -4,7 +4,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/books.typ": books
 
-#show: template.with(current-page: "listings:books")
+#show: template.with(current-page: "listings:books", title: "Books")
 
 #listing-page(
   "Books",

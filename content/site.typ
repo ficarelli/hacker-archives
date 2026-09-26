@@ -474,7 +474,14 @@
   doc
 }
 
-#let template(current-page: none, doc) = {
+// `title` names the page in the browser tab, with the site's name after it. The
+// front page passes none and is named for the site alone. Without this rheo
+// falls back to the page's first heading, or failing that its filename, which
+// is how the front page came to be called "Index".
+#let SITE-TITLE = "Hacker Archives"
+
+#let template(current-page: none, title: none, doc) = {
+  set document(title: if title == none { SITE-TITLE } else { title + " — " + SITE-TITLE })
   // `prefix` replaces rookery's default `idea`, so a listing's id reads
   // `hack:phrack` and its permalink shows as `[hack:phrack]`. Like the theme it
   // is ONE document-wide value that every vertebra has to agree on, which is why

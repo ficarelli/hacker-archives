@@ -1,7 +1,7 @@
 #import "../site.typ": listing-page, template
 #import "../data/artifacts.typ": artifacts
 
-#show: template.with(current-page: "listings:artifacts")
+#show: template.with(current-page: "listings:artifacts", title: "Preserving Particular Artifacts")
 
 #listing-page(
   "Preserving Particular Artifacts",

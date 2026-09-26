@@ -8,7 +8,7 @@
 #import "data/funding.typ": funding
 #import "data/people.typ": people
 
-#show: template.with(current-page: "resources")
+#show: template.with(current-page: "resources", title: "Resources")
 
 #let pool = practice + artifacts + digital-archives + funding + people
 
